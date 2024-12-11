@@ -23,7 +23,7 @@
         }
 
         canvas {
-            margin-top: 20px;
+            margin-top: 30px;
             border: 2px solid #333;
             border-radius: 10px;
             background-color: #ffffff;
@@ -32,8 +32,7 @@
         .controls {
             margin-top: 20px;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            justify-content: center;
         }
 
         button {
@@ -44,6 +43,7 @@
             color: white;
             border: none;
             border-radius: 8px;
+            margin: 0 10px;
             transition: background-color 0.3s;
         }
 
@@ -67,43 +67,19 @@
             color: red;
             margin-top: 20px;
         }
-
-        .arrow-controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .arrow-controls button {
-            padding: 20px;
-            font-size: 18px;
-        }
     </style>
 </head>
 
 <body>
     <h1>Snake Game</h1>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
-
     <div class="controls">
         <button onclick="decreaseSpeed()">Slow Down</button>
         <button onclick="increaseSpeed()">Speed Up</button>
         <button onclick="restartGame()">Restart</button>
     </div>
-
-    <div class="arrow-controls">
-        <button onclick="setDirection('UP')">&#8593;</button>
-        <button disabled></button>
-        <button onclick="setDirection('LEFT')">&#8592;</button>
-        <button></button>
-        <button onclick="setDirection('RIGHT')">&#8594;</button>
-        <button disabled></button>
-        <button onclick="setDirection('DOWN')">&#8595;</button>
-    </div>
-
-    <div class="info">Use the arrow keys or on-screen controls to move the snake.</div>
-    <div class="game-over" id="gameOverMessage"></div>
+    <div class="info">Use arrow keys to control the snake.</div>
+    <div class="game-over" id="gameOverMessage"></div> <!-- Placeholder for game over message -->
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -177,6 +153,7 @@
             ) {
                 clearInterval(gameInterval);
                 gameOverMessage.textContent = 'Game Over! Press Restart to play again.';
+                gameOverMessage.style.color = '#ff3333'; // Make it red for emphasis
             }
         }
 
@@ -187,14 +164,6 @@
             if (event.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
             if (event.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
         });
-
-        // Touch-based controls
-        function setDirection(newDirection) {
-            if (newDirection === 'LEFT' && direction !== 'RIGHT') direction = 'LEFT';
-            if (newDirection === 'UP' && direction !== 'DOWN') direction = 'UP';
-            if (newDirection === 'RIGHT' && direction !== 'LEFT') direction = 'RIGHT';
-            if (newDirection === 'DOWN' && direction !== 'UP') direction = 'DOWN';
-        }
 
         // Adjust speed
         function increaseSpeed() {
@@ -213,6 +182,7 @@
 
         // Restart the game with new speed
         function restartGame() {
+            gameOverMessage.textContent = ''; // Clear "Game Over" message before restarting
             clearInterval(gameInterval);
             gameInterval = setInterval(drawGame, speed);
             initGame();
