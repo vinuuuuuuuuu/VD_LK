@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VD.LK</title>
     <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Replace with the correct path to your icon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Google Fonts for a stylish font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -16,7 +16,6 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-image: url('your-background-image.jpg');
-            /* Replace with your image path */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -26,7 +25,6 @@
             text-align: center;
             height: 100vh;
             overflow: hidden;
-            /* Prevent scrollbars */
             position: relative;
         }
 
@@ -55,9 +53,7 @@
             margin: 20px;
             color: #ff0000;
             font-size: 3vw;
-            /* Responsive size */
             font-family: 'Poppins', sans-serif;
-            position: relative;
             letter-spacing: 2px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
@@ -75,16 +71,14 @@
 
         .game-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 20px;
             padding: 20px;
-            max-width: 1200px;
             width: 100%;
         }
 
         .game-card {
             text-align: center;
-            position: relative;
             background-color: rgba(255, 255, 255, 0.295);
             border-radius: 10px;
             padding: 20px;
@@ -100,8 +94,9 @@
         }
 
         .game-button img {
-            width: 200px;
-            height: 200px;
+            width: 100%;
+            max-width: 200px;
+            height: auto;
             object-fit: cover;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -114,7 +109,7 @@
 
         .game-card h3 {
             margin-top: 10px;
-            font-size: 1.5rem;
+            font-size: 1rem;
             color: #ffffff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
             background-color: rgba(0, 0, 0, 0.5);
@@ -126,58 +121,21 @@
         .holiday-decoration {
             position: absolute;
             bottom: 20px;
-            left: 45%;
+            left: 50%;
             transform: translateX(-50%);
-            font-size: 2.5vw;
+            font-size: 1.5rem;
             color: #ff0000;
             text-shadow: 2px 2px 6px rgb(0, 0, 0);
             background-color: rgba(0, 255, 64, 0.685);
             border-radius: 10px;
-            padding: 20px;
+            padding: 10px 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Responsive Layout Adjustments */
-        @media screen and (max-width: 768px) {
-            h1 {
-                font-size: 6vw;
-            }
-
-            .game-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .game-card h3 {
-                font-size: 1.2rem;
-            }
-
-            .holiday-decoration {
-                font-size: 4vw;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            h1 {
-                font-size: 8vw;
-            }
-
-            .game-container {
-                grid-template-columns: 1fr;
-            }
-
-            .game-card h3 {
-                font-size: 1rem;
-            }
-
-            .holiday-decoration {
-                font-size: 5vw;
-            }
         }
     </style>
 </head>
 
 <body>
-    <h1>WELCOME TO <span style="color: #5ea662;">VD.LK</span><span style="color: #ff0606;"> GAMING</span></h1>
+    <h1>WELCOME TO <span style="color: #00ff0d;">VD.LK</span><span style="color: #ff0606;"> GAMING</span></h1>
 
     <!-- Snowflakes -->
     <div class="snowflake" style="left: 10%; animation-duration: 10s;">❄️</div>
