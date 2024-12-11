@@ -17,7 +17,6 @@
             height: 100vh;
             flex-direction: column;
             background-image: url('cris.jpg');
-            /* Replace with the correct path to your Christmas image */
             background-size: cover;
             color: white;
         }
@@ -26,13 +25,9 @@
             font-size: 4em;
             font-weight: bold;
             color: #0dffdf;
-            /* Gold color for the title */
-           
-            /* Underline with wavy red decoration */
             text-transform: uppercase;
             letter-spacing: 5px;
             text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
-            /* Shadow for text */
             margin-bottom: 30px;
         }
 
@@ -77,7 +72,6 @@
         .score {
             background-color: rgba(2, 0, 128, 0.8);
             border-radius: 5px;
-            color: rgb(255, 255, 255);
         }
 
         .timer {
@@ -125,7 +119,7 @@
 
     <script>
         let score = 0;
-        let timeLeft = 50;  // 50 seconds
+        let timeLeft = 50;
         let gameInterval;
         const gameContainer = document.querySelector('.game-container');
         const basket = document.getElementById('basket');
@@ -134,14 +128,14 @@
         const gameOverMessage = document.getElementById('gameOverMessage');
         const tryAgainButton = document.getElementById('tryAgainButton');
         const basketWidth = basket.offsetWidth;
-        let basketPosition = 175;  // Initial position of the basket (centered)
+        let basketPosition = 175;
 
         // Create a new gift falling down
         function createGift() {
             const gift = document.createElement('div');
             gift.classList.add('gift');
-            gift.style.left = `${Math.random() * (gameContainer.offsetWidth - 50)}px`;  // Random horizontal position
-            gift.style.top = '0px'; // Start from the top of the container
+            gift.style.left = `${Math.random() * (gameContainer.offsetWidth - 50)}px`;
+            gift.style.top = '0px';
             gameContainer.appendChild(gift);
             dropGift(gift);
         }
@@ -158,21 +152,18 @@
                 // Check if the gift hits the bottom or is caught by the basket
                 if (giftPosition > gameContainer.offsetHeight - 60) {
                     if (Math.abs(gift.offsetLeft - basketPosition) < basketWidth) {
-                        // Gift caught by the basket
                         score++;
                         scoreDisplay.textContent = `Score: ${score}`;
                     } else {
-                        // Missed gift
                         endGame();
                     }
-                    // Remove gift after it falls
                     gameContainer.removeChild(gift);
                     clearInterval(dropInterval);
                 }
             }, 10);
         }
 
-        // Move the basket left or right with arrow keys
+        // Move the basket with arrow keys
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft' && basketPosition > 0) {
                 basketPosition -= 10;
@@ -180,6 +171,28 @@
                 basketPosition += 10;
             }
             basket.style.left = `${basketPosition}px`;
+        });
+
+        // Enable touch controls for the basket
+        let isDragging = false;
+
+        basket.addEventListener('touchstart', (e) => {
+            isDragging = true;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                const touch = e.touches[0];
+                const relativeX = touch.clientX - gameContainer.getBoundingClientRect().left;
+                if (relativeX > 0 && relativeX < gameContainer.offsetWidth - basketWidth) {
+                    basketPosition = relativeX - basketWidth / 2;
+                    basket.style.left = `${basketPosition}px`;
+                }
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
         });
 
         // Timer countdown
@@ -202,7 +215,7 @@
             } else {
                 gameOverMessage.textContent = `Game Over! Your score: ${score}`;
             }
-            tryAgainButton.style.display = 'block';  // Show the "Try Again" button
+            tryAgainButton.style.display = 'block';
         }
 
         // Restart the game by reloading the page
@@ -214,7 +227,7 @@
         function startGame() {
             gameInterval = setInterval(() => {
                 createGift();
-            }, 1000); // Create a new gift every second
+            }, 1000);
 
             countdownTimer();
         }
