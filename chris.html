@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Christmas Gifts</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #d7f3f5;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-image: url('cris.jpg');
+            /* Replace with the correct path to your Christmas image */
+            background-size: cover;
+            color: white;
+        }
+
+        h1 {
+            font-size: 4em;
+            font-weight: bold;
+            color: #0dffdf;
+            /* Gold color for the title */
+           
+            /* Underline with wavy red decoration */
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+            /* Shadow for text */
+            margin-bottom: 30px;
+        }
+
+        .game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            border: 3px solid #fff;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .gift {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('gift.png');
+            background-size: cover;
+            border-radius: 5px;
+        }
+
+        .basket {
+            position: absolute;
+            bottom: 10px;
+            left: 175px;
+            width: 70px;
+            height: 70px;
+            background-color: brown;
+            border-radius: 50%;
+            border: 3px solid #fff;
+        }
+
+        .score,
+        .timer {
+            font-size: 20px;
+            margin-top: 10px;
+            padding: 10px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .score {
+            background-color: rgba(2, 0, 128, 0.8);
+            border-radius: 5px;
+            color: rgb(255, 255, 255);
+        }
+
+        .timer {
+            background-color: rgba(255, 0, 0, 0.8);
+            border-radius: 5px;
+        }
+
+        .game-over {
+            font-size: 24px;
+            color: rgb(0, 0, 0);
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(115, 255, 0, 0.7);
+            border-radius: 5px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .try-again-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #5ea662;
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .try-again-button:hover {
+            background-color: #4c8e50;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Catch the Gifts!</h1>
+    <div class="game-container">
+        <div class="basket" id="basket"></div>
+    </div>
+    <div class="score" id="score">Score: 0</div>
+    <div class="timer" id="timer">Time: 50</div>
+    <div class="game-over" id="gameOverMessage"></div>
+    <button class="try-again-button" id="tryAgainButton" onclick="restartGame()">Try Again</button>
+
+    <script>
+        let score = 0;
+        let timeLeft = 50;  // 50 seconds
+        let gameInterval;
+        const gameContainer = document.querySelector('.game-container');
+        const basket = document.getElementById('basket');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+        const gameOverMessage = document.getElementById('gameOverMessage');
+        const tryAgainButton = document.getElementById('tryAgainButton');
+        const basketWidth = basket.offsetWidth;
+        let basketPosition = 175;  // Initial position of the basket (centered)
+
+        // Create a new gift falling down
+        function createGift() {
+            const gift = document.createElement('div');
+            gift.classList.add('gift');
+            gift.style.left = `${Math.random() * (gameContainer.offsetWidth - 50)}px`;  // Random horizontal position
+            gift.style.top = '0px'; // Start from the top of the container
+            gameContainer.appendChild(gift);
+            dropGift(gift);
+        }
+
+        // Drop the gift down the screen
+        function dropGift(gift) {
+            let giftPosition = 0;
+            const giftSpeed = 2;
+
+            const dropInterval = setInterval(() => {
+                giftPosition += giftSpeed;
+                gift.style.top = `${giftPosition}px`;
+
+                // Check if the gift hits the bottom or is caught by the basket
+                if (giftPosition > gameContainer.offsetHeight - 60) {
+                    if (Math.abs(gift.offsetLeft - basketPosition) < basketWidth) {
+                        // Gift caught by the basket
+                        score++;
+                        scoreDisplay.textContent = `Score: ${score}`;
+                    } else {
+                        // Missed gift
+                        endGame();
+                    }
+                    // Remove gift after it falls
+                    gameContainer.removeChild(gift);
+                    clearInterval(dropInterval);
+                }
+            }, 10);
+        }
+
+        // Move the basket left or right with arrow keys
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && basketPosition > 0) {
+                basketPosition -= 10;
+            } else if (e.key === 'ArrowRight' && basketPosition < gameContainer.offsetWidth - basketWidth) {
+                basketPosition += 10;
+            }
+            basket.style.left = `${basketPosition}px`;
+        });
+
+        // Timer countdown
+        function countdownTimer() {
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Time: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // End game and show message
+        function endGame() {
+            clearInterval(gameInterval);
+            if (score >= 30) {
+                gameOverMessage.textContent = "You Win!";
+            } else {
+                gameOverMessage.textContent = `Game Over! Your score: ${score}`;
+            }
+            tryAgainButton.style.display = 'block';  // Show the "Try Again" button
+        }
+
+        // Restart the game by reloading the page
+        function restartGame() {
+            location.reload();
+        }
+
+        // Start the game by creating gifts at intervals
+        function startGame() {
+            gameInterval = setInterval(() => {
+                createGift();
+            }, 1000); // Create a new gift every second
+
+            countdownTimer();
+        }
+
+        // Start the game when the page loads
+        window.onload = startGame;
+    </script>
+</body>
+
+</html>
