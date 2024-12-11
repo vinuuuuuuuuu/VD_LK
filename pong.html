@@ -53,30 +53,45 @@
         const paddleHeight = 100;
         let playerY = (canvas.height - paddleHeight) / 2;
         let aiY = (canvas.height - paddleHeight) / 2;
-        let playerSpeed = 0;
         let aiSpeed = 4;
 
         // Scores
         let playerScore = 0;
         let aiScore = 0;
 
-        // Controls
-        document.addEventListener('keydown', keyDownHandler, false);
-        document.addEventListener('keyup', keyUpHandler, false);
+        // Touch controls
+        let touchStartY = 0;
+        let touchCurrentY = 0;
 
-        function keyDownHandler(e) {
-            if (e.key === "ArrowUp") {
-                playerSpeed = -5;  // Move up
-            } else if (e.key === "ArrowDown") {
-                playerSpeed = 5;   // Move down
-            }
-        }
+        // Keyboard controls
+        let upPressed = false;
+        let downPressed = false;
 
-        function keyUpHandler(e) {
-            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-                playerSpeed = 0;  // Stop movement
-            }
-        }
+        canvas.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            touchCurrentY = e.touches[0].clientY;
+            const touchDelta = touchCurrentY - touchStartY;
+            playerY += touchDelta * 0.3; // Adjust sensitivity
+            touchStartY = touchCurrentY;
+
+            // Prevent player paddle from going out of bounds
+            if (playerY < 0) playerY = 0;
+            if (playerY > canvas.height - paddleHeight) playerY = canvas.height - paddleHeight;
+        });
+
+        // Keyboard event listeners
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') upPressed = true;
+            if (e.key === 'ArrowDown') downPressed = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowUp') upPressed = false;
+            if (e.key === 'ArrowDown') downPressed = false;
+        });
 
         // Draw the ball
         function drawBall() {
@@ -141,15 +156,6 @@
             if (aiY > canvas.height - paddleHeight) aiY = canvas.height - paddleHeight;
         }
 
-        // Update the player's paddle
-        function playerMove() {
-            playerY += playerSpeed;
-
-            // Prevent player paddle from going out of bounds
-            if (playerY < 0) playerY = 0;
-            if (playerY > canvas.height - paddleHeight) playerY = canvas.height - paddleHeight;
-        }
-
         // Update the score display
         function updateScore() {
             document.getElementById('playerScore').textContent = playerScore;
@@ -163,6 +169,12 @@
             ballSpeedX = -ballSpeedX;
         }
 
+        // Update player paddle position based on keyboard input
+        function movePlayerPaddle() {
+            if (upPressed && playerY > 0) playerY -= 6; // Move up
+            if (downPressed && playerY < canvas.height - paddleHeight) playerY += 6; // Move down
+        }
+
         // Draw everything
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
@@ -170,7 +182,7 @@
             drawPaddles();
             ballMove();
             aiMove();
-            playerMove();
+            movePlayerPaddle(); // Move player paddle based on keyboard input
             requestAnimationFrame(draw); // Keep drawing
         }
 
